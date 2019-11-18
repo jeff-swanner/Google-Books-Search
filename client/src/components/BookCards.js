@@ -10,6 +10,8 @@ function BookCards(props) {
                         {props.bookArray.items ? (
                             <div>
                             {props.bookArray.items.map(book => (
+                                <div>
+                                {book.volumeInfo.authors &&
                                 <div className="card" key={book.id}>
                                     <div className="card-body">
                                         {props.savedBookids.includes(book.id) ? (
@@ -21,9 +23,9 @@ function BookCards(props) {
                                         <button type="button" class="btn btn-info float-right">View</button>
                                         </a>
                                         <p className="lead">{book.volumeInfo.title}</p>
-                                        {book.volumeInfo.authors.length > 0 &&
+                                        
                                             <p>Written by {book.volumeInfo.authors[0]}</p>
-                                        }
+                                        
                                         <div className="row">
                                             <div className="col-lg-3 col-md-3 col-12" >
                                                 <img src={book.volumeInfo.imageLinks.thumbnail} className="img-fluid  p-1"></img>
@@ -33,6 +35,8 @@ function BookCards(props) {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                }
                                 </div>
                             ))} 
                             </div>

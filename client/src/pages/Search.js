@@ -9,7 +9,6 @@ var bookArray = {
 class Search extends Component {
   state = {
     bookArray: bookArray,
-    searchTerm: 'Harry Potter',
     savedBookids: []
   };
 
@@ -33,13 +32,14 @@ class Search extends Component {
 
   bookSearch = (event) => {
     event.preventDefault();
-    console.log(this.state.searchTerm)
     fetch("https://www.googleapis.com/books/v1/volumes?q="+this.state.searchTerm+"&printType=books&key=AIzaSyCqwaY-3wWYY4jadfbnn8bv2zPEjZA2Moo")
     .then(res => res.json())
     .then(
         (result) => {
-          console.log(result)
-          this.setState({bookArray: result})
+          if(result.items) {
+            console.log(result.items)
+            this.setState({bookArray: result})
+          }
         },
         (error) => {
         this.setState({
@@ -83,7 +83,7 @@ class Search extends Component {
                   <form>
                     <div class="form-group">
                       <label>Book</label>
-                      <input type="text" className="form-control" id="bookInput" name="searchTerm" value={this.state.searchTerm} onChange={this.handleInputChange}/>
+                      <input type="text" className="form-control" id="bookInput" name="searchTerm" value={this.state.searchTerm} onChange={this.handleInputChange} placeholder="Harry Potter"/>
                     </div>
                     <button onClick={this.bookSearch} class="btn btn-primary float-right">Submit</button>
                   </form>
