@@ -1,15 +1,15 @@
 import React, { Component } from "react";
+import SearchCard from "../components/SearchCard"
 import BookCards from "../components/BookCards";
 import API from "../utils/API";
-
-var bookArray = {
-  items: []
-};
+import Navbar from "../components/Navbar";
+import Jumbotron from "../components/Jumbotron";
 
 class Search extends Component {
   state = {
-    bookArray: bookArray,
-    savedBookids: []
+    bookArray: [],
+    savedBookids: [],
+    searchTerm:''
   };
 
   componentDidMount() {
@@ -18,7 +18,6 @@ class Search extends Component {
         let ids = [];
         res.data.forEach(book => ids.push(book.bookID))
         this.setState({ savedBookids: ids });
-        console.log(ids)
       })
       .catch(err => console.log(err));
   }
@@ -32,21 +31,25 @@ class Search extends Component {
 
   bookSearch = (event) => {
     event.preventDefault();
-    fetch("https://www.googleapis.com/books/v1/volumes?q="+this.state.searchTerm+"&printType=books&key=AIzaSyCqwaY-3wWYY4jadfbnn8bv2zPEjZA2Moo")
+    let searchTerm;
+    if(this.state.searchTerm) {
+      searchTerm = this.state.searchTerm;
+    } else {
+      searchTerm = "Harry Potter";
+    };
+    fetch("https://www.googleapis.com/books/v1/volumes?q="+searchTerm+"&printType=books&key=AIzaSyCqwaY-3wWYY4jadfbnn8bv2zPEjZA2Moo")
     .then(res => res.json())
     .then(
-        (result) => {
-          if(result.items) {
-            console.log(result.items)
-            this.setState({bookArray: result})
-          }
-        },
-        (error) => {
-        this.setState({
-            isLoaded: true,
-            error
-        });
+      (result) => {
+        if(result.items) {
+          this.setState({bookArray: result})
+        } else {
+          this.setState({bookArray: []})
         }
+      },
+      (error) => {
+        console.log(error);
+      }
     )
   }
 
@@ -70,27 +73,19 @@ class Search extends Component {
     }
   };
 
-
   render() {
     return (
       <div>
+        <Navbar
+          search = "active"
+        />
+        <Jumbotron/>
         <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="card">
-                <div className="card-body">
-                  <p className="lead">Book Search</p>
-                  <form>
-                    <div class="form-group">
-                      <label>Book</label>
-                      <input type="text" className="form-control" id="bookInput" name="searchTerm" value={this.state.searchTerm} onChange={this.handleInputChange} placeholder="Harry Potter"/>
-                    </div>
-                    <button onClick={this.bookSearch} class="btn btn-primary float-right">Submit</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SearchCard 
+            searchTerm = {this.state.searchTerm}
+            handleInputChange = {this.handleInputChange}
+            bookSearch = {this.bookSearch}
+          />
           <BookCards
             bookArray = {this.state.bookArray}
             saveBook = {this.saveBook}

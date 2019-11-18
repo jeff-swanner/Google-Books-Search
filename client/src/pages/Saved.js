@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import API from "../utils/API";
 import SavedCards from "../components/SavedCards";
+import Navbar from "../components/Navbar";
+import Jumbotron from "../components/Jumbotron";
 
 class Search extends Component {
   state = {
@@ -27,6 +29,10 @@ class Search extends Component {
   render() {
     return (
       <div>
+        <Navbar
+          saved = "active"
+        />
+        <Jumbotron/>
         <div className="container">
           <SavedCards
             bookArray = {this.state.bookArray}
